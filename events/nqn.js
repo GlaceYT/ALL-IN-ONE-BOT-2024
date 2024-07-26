@@ -17,7 +17,9 @@ module.exports = (client) => {
       const emojis = [];
 
       for (const [_, emojiName] of matches) {
-        const emoji = emojiGuilds.map(guild => guild.emojis.cache.find(e => e.name === emojiName)).find(e => e);
+        // Find the emoji in the guilds' emoji caches
+        const emoji = emojiGuilds.map(guild => guild.emojis.cache.find(e => e.name === emojiName && e.animated)).find(e => e);
+
         if (emoji) {
           emojis.push({ name: emojiName, emoji: emoji.toString() });
         }
