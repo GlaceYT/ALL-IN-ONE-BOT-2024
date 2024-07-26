@@ -1,5 +1,4 @@
 const { prefix } = require('../config.json'); // Load prefix
-const shiva = require('../shiva');
 const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
@@ -16,7 +15,6 @@ module.exports = {
         let command;
         let config;
 
-        // Read the existing config file
         try {
             const data = fs.readFileSync(configPath, 'utf8');
             config = JSON.parse(data);
@@ -25,18 +23,31 @@ module.exports = {
             return message.reply('There was an error reading the configuration.');
         }
 
-        const hentaiStatus = config.hentaicommands && config.hentaicommands[message.guild.id] && config.hentaicommands[message.guild.id].status;
+       
+        const hentaiStatus = config.hentaicommands &&
+            config.hentaicommands[message.guild.id] &&
+            config.hentaicommands[message.guild.id].status;
 
-        // Check if command exists and handle based on category
-        if (fs.existsSync(path.join(__dirname, '..', 'excesscommands', 'hentai', `${commandName}.js`))) {
-            if (!hentaiStatus) return message.reply('Hentai commands are currently disabled.'); // Check if hentai commands are enabled
-            command = require(path.join(__dirname, '..', 'excesscommands', 'hentai', `${commandName}.js`));
-        } else if (fs.existsSync(path.join(__dirname, '..', 'excesscommands', 'music', `${commandName}.js`))) {
-            command = require(path.join(__dirname, '..', 'excesscommands', 'music', `${commandName}.js`));
-        } else if (fs.existsSync(path.join(__dirname, '..', 'excesscommands', 'troll', `${commandName}.js`))) {
-            command = require(path.join(__dirname, '..', 'excesscommands', 'troll', `${commandName}.js`));
-        } else if (fs.existsSync(path.join(__dirname, '..', 'excesscommands', 'other', `${commandName}.js`))) {
-            command = require(path.join(__dirname, '..', 'excesscommands', 'other', `${commandName}.js`));
+        
+        const globalExcessCommands = config.excessCommands || {};
+
+      
+        const getCommandPath = (category, commandName) => {
+            return path.join(__dirname, '..', 'excesscommands', category, `${commandName}.js`);
+        };
+
+      
+        if (fs.existsSync(getCommandPath('hentai', commandName))) {
+            if (!hentaiStatus) return message.reply('Hentai commands are currently disabled.');
+            command = require(getCommandPath('hentai', commandName));
+        } else if (globalExcessCommands.lavalink_music && fs.existsSync(getCommandPath('lavalink music', commandName))) {
+            command = require(getCommandPath('lavalink music', commandName));
+        } else if (globalExcessCommands.troll && fs.existsSync(getCommandPath('troll', commandName))) {
+            command = require(getCommandPath('troll', commandName));
+        } else if (globalExcessCommands.other && fs.existsSync(getCommandPath('other', commandName))) {
+            command = require(getCommandPath('other', commandName));
+        } else if (globalExcessCommands.utility && fs.existsSync(getCommandPath('utility', commandName))) {
+            command = require(getCommandPath('utility', commandName));
         }
 
         if (!command) return;
@@ -56,32 +67,57 @@ module.exports = {
     },
 };
 
+
 function logCommandCounts() {
-    const folders = ['hentai', 'music', 'troll', 'other', 'utility'];
+    const folders = ['hentai', 'lavalink music', 'troll', 'other', 'utility'];
     const basePath = path.join(__dirname, '..', 'excesscommands');
     let totalCommands = 0;
 
-    // Collect folder counts
+    
+    let config;
+    try {
+        const data = fs.readFileSync(configPath, 'utf8');
+        config = JSON.parse(data);
+    } catch (err) {
+        console.error('Error reading or parsing config file:', err);
+        return;
+    }
+
+  
     const counts = folders.map(folder => {
         const folderPath = path.join(basePath, folder);
-        const files = fs.readdirSync(folderPath).filter(file => file.endsWith('.js'));
-        const count = files.length;
-        totalCommands += count;
-        return { folder, count };
+        let count = 0;
+        let status = 'Disabled';
+
+        if (folder === 'hentai') {
+            
+            const hentaiStatus = config.hentaicommands && Object.values(config.hentaicommands).some(guild => guild.status);
+            if (hentaiStatus) {
+                status = 'Enabled';
+                count = fs.readdirSync(folderPath).filter(file => file.endsWith('.js')).length;
+                totalCommands += count;
+            }
+        } else if (config.excessCommands[folder]) {
+            status = 'Enabled';
+            count = fs.readdirSync(folderPath).filter(file => file.endsWith('.js')).length;
+            totalCommands += count;
+        }
+
+        return { folder, count, status };
     });
 
-    // Determine the maximum length for folder names and command counts
+  
     const maxFolderLength = Math.max(...counts.map(({ folder }) => folder.length));
-    const totalCountLength = `Total commands: ${totalCommands}`.length;
+    const totalCountLength = `Total number of commands: ${totalCommands}`.length;
+
     
-    // Set box width to accommodate longest line
     const boxWidth = Math.max(maxFolderLength + 34, totalCountLength + 2);
 
     const line = `└${'─'.repeat(boxWidth - 2)}┘`;
     console.log('┌' + '─'.repeat(boxWidth - 2) + '┐');
 
-    counts.forEach(({ folder, count }) => {
-        const lineContent = `Folder: ${folder.padEnd(maxFolderLength)} Number of commands: ${count.toString().padStart(2)}`;
+    counts.forEach(({ folder, count, status }) => {
+        const lineContent = `Folder: ${folder.padEnd(maxFolderLength)} Number of commands: ${status === 'Disabled' ? 'Disabled' : count.toString().padStart(2)}`;
         console.log(`│ ${lineContent.padEnd(boxWidth - 2)} `);
     });
 
@@ -89,5 +125,5 @@ function logCommandCounts() {
     console.log(line);
 }
 
-// Call the function to log command counts when the bot starts
+
 logCommandCounts();

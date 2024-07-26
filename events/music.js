@@ -5,7 +5,7 @@ const config = require('../config.json');
 const axios = require('axios');
 const { Dynamic } = require("musicard");
 const fs = require('fs');
-const musicIcons = require('../UI/icons/musicicons'); 
+const musicIcons = require('../UI/icons/musicicons');
 
 async function getSpotifyToken() {
     const response = await axios.post('https://accounts.spotify.com/api/token', null, {
@@ -19,7 +19,6 @@ async function getSpotifyToken() {
     });
     return response.data.access_token;
 }
-
 
 async function getSpotifyTrackId(token, songName) {
     const response = await axios.get('https://api.spotify.com/v1/search', {
@@ -36,7 +35,6 @@ async function getSpotifyTrackId(token, songName) {
     return track ? track.id : null;
 }
 
-
 async function getSpotifyThumbnail(token, trackId) {
     const response = await axios.get(`https://api.spotify.com/v1/tracks/${trackId}`, {
         headers: {
@@ -47,107 +45,108 @@ async function getSpotifyThumbnail(token, trackId) {
 }
 
 module.exports = (client) => {
-    client.manager = new Manager({
-        nodes: [
-            {
-                host: config.music.lavalink.host,
-                port: config.music.lavalink.port,
-                password: config.music.lavalink.password,
-                secure: config.music.lavalink.secure
+    
+    if (config.excessCommands.lavalink_music) {
+        client.manager = new Manager({
+            nodes: [
+                {
+                    host: config.lavalink_music.lavalink.host,
+                    port: config.lavalink_music.lavalink.port,
+                    password: config.lavalink_music.lavalink.password,
+                    secure: config.lavalink_music.lavalink.secure
+                }
+            ],
+            plugins: [
+                new Spotify({
+                    clientID: config.spotifyClientId,
+                    clientSecret: config.spotifyClientSecret
+                })
+            ],
+            send(id, payload) {
+                const guild = client.guilds.cache.get(id);
+                if (guild) guild.shard.send(payload);
             }
-        ],
-        plugins: [
-            new Spotify({
-                clientID: config.spotifyClientId,
-                clientSecret: config.spotifyClientSecret
-            })
-        ],
-        send(id, payload) {
-            const guild = client.guilds.cache.get(id);
-            if (guild) guild.shard.send(payload);
-        }
-    });
+        });
 
-    client.manager.on('nodeConnect', node => {
-        console.log(`\x1b[34m[ LAVALINK CONNECTION ]\x1b[0m Node connected: \x1b[32m${node.options.identifier}\x1b[0m`);
-    });
+        client.manager.on('nodeConnect', node => {
+            console.log(`\x1b[34m[ LAVALINK CONNECTION ]\x1b[0m Node connected: \x1b[32m${node.options.identifier}\x1b[0m`);
+        });
 
-    client.manager.on('nodeError', (node, error) => {
-        if (error.message.includes('Unexpected op "ready"')) {
-            return;
-        }
-        console.error(`\x1b[31m[ERROR]\x1b[0m Node \x1b[32m${node.options.identifier}\x1b[0m had an error: \x1b[33m${error.message}\x1b[0m`);
-    });
-
-    client.manager.on('trackStart', async (player, track) => {
-        const channel = client.channels.cache.get(player.textChannel);
-
-        try {
-         
-            const accessToken = await getSpotifyToken();
-
-            
-            const trackId = await getSpotifyTrackId(accessToken, track.title);
-
-            if (!trackId) {
-                throw new Error(`Track ID not found for song: ${track.title}`);
+        client.manager.on('nodeError', (node, error) => {
+            if (error.message.includes('Unexpected op "ready"')) {
+                return;
             }
+            console.error(`\x1b[31m[ERROR]\x1b[0m Node \x1b[32m${node.options.identifier}\x1b[0m had an error: \x1b[33m${error.message}\x1b[0m`);
+        });
 
-            const thumbnailUrl = await getSpotifyThumbnail(accessToken, trackId);
+        client.manager.on('trackStart', async (player, track) => {
+            const channel = client.channels.cache.get(player.textChannel);
 
-           
-            const musicCard = await Dynamic({
-                thumbnailImage: thumbnailUrl,
-                name: track.title,
-                author: track.author,
-                authorColor: "#FF7A00",
-                progress: 50,
-                imageDarkness: 60,
-                nameColor: "#FFFFFF",
-                progressColor: "#FF7A00",
-                progressBarColor: "#5F2D00",
-            });
+            try {
+                const accessToken = await getSpotifyToken();
+                const trackId = await getSpotifyTrackId(accessToken, track.title);
 
-            fs.writeFileSync('musicard.png', musicCard);
+                if (!trackId) {
+                    throw new Error(`Track ID not found for song: ${track.title}`);
+                }
 
+                const thumbnailUrl = await getSpotifyThumbnail(accessToken, trackId);
+
+                const musicCard = await Dynamic({
+                    thumbnailImage: thumbnailUrl,
+                    name: track.title,
+                    author: track.author,
+                    authorColor: "#FF7A00",
+                    progress: 50,
+                    imageDarkness: 60,
+                    nameColor: "#FFFFFF",
+                    progressColor: "#FF7A00",
+                    progressBarColor: "#5F2D00",
+                });
+
+                fs.writeFileSync('musicard.png', musicCard);
+
+                const embed = new EmbedBuilder()
+                    .setAuthor({
+                        name: "Now playing",
+                        iconURL: musicIcons.playerIcon,
+                        url: "https://discord.gg/xQF9f9yUEM"
+                    })
+                    .setDescription(`- Song name :**${track.title}**\n- Author :**${track.author}**`)
+                    .setImage('attachment://musicard.png')
+                    .setFooter({ text: 'Lavalink Player', iconURL: musicIcons.footerIcon })
+                    .setColor('#FF00FF');
+
+                const attachment = new AttachmentBuilder('musicard.png', { name: 'musicard.png' });
+
+                await channel.send({ embeds: [embed], files: [attachment] });
+            } catch (error) {
+                console.error('Error creating or sending music card:', error);
+            }
+        });
+
+        client.manager.on('queueEnd', player => {
+            const channel = client.channels.cache.get(player.textChannel);
             const embed = new EmbedBuilder()
-            .setAuthor({ 
-                name: "Now playing", 
-                iconURL: musicIcons.playerIcon,
-                url: "https://discord.gg/xQF9f9yUEM"
-            })
-                .setDescription(`- Song name :**${track.title}**\n- Author :**${track.author}**`)
-                .setImage('attachment://musicard.png')
+                .setAuthor({
+                    name: "Queue is Empty",
+                    iconURL: musicIcons.beatsIcon,
+                    url: "https://discord.gg/xQF9f9yUEM"
+                })
+                .setDescription('**Leaving voice channel!**')
                 .setFooter({ text: 'Lavalink Player', iconURL: musicIcons.footerIcon })
-                .setColor('#FF00FF');
+                .setColor('#FFFF00');
+            channel.send({ embeds: [embed] });
+            player.destroy();
+        });
 
-            const attachment = new AttachmentBuilder('musicard.png', { name: 'musicard.png' });
+        client.on('raw', d => client.manager.updateVoiceState(d));
 
-            await channel.send({ embeds: [embed], files: [attachment] });
-        } catch (error) {
-            console.error('Error creating or sending music card:', error);
-        }
-    });
-
-    client.manager.on('queueEnd', player => {
-        const channel = client.channels.cache.get(player.textChannel);
-        const embed = new EmbedBuilder()
-        .setAuthor({ 
-            name: "Queue is Empty", 
-            iconURL: musicIcons.beatsIcon,
-            url: "https://discord.gg/xQF9f9yUEM"
-        })
-            .setDescription('**Leaving voice channel!**')
-            .setFooter({ text: 'Lavalink Player', iconURL: musicIcons.footerIcon })
-            .setColor('#FFFF00');
-        channel.send({ embeds: [embed] });
-        player.destroy();
-    });
-
-    client.on('raw', d => client.manager.updateVoiceState(d));
-
-    client.once('ready', () => {
-        console.log('\x1b[35m[ MUSIC 2 ]\x1b[0m', '\x1b[32mLavalink Music System Active ✅\x1b[0m');
-        client.manager.init(client.user.id);
-    });
+        client.once('ready', () => {
+            console.log('\x1b[35m[ MUSIC 2 ]\x1b[0m', '\x1b[32mLavalink Music System Active ✅\x1b[0m');
+            client.manager.init(client.user.id);
+        });
+    } else {
+        console.log('\x1b[31m[ MUSIC 2 ]\x1b[0m', '\x1b[31mLavalink Music System Disabled ❌\x1b[0m');
+    }
 };

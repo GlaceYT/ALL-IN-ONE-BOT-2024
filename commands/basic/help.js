@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const config = require('../../config.json');
 
-const commandFolders = ['anime', 'basic', 'fun', 'moderation', 'utility', 'music'];
+const commandFolders = ['anime', 'basic', 'fun', 'moderation', 'utility', 'distube music','setups'];
 const enabledCategories = config.excessCommands;
 
 module.exports = {
@@ -66,7 +66,7 @@ module.exports = {
                 const page = {
                     title: `${category.charAt(0).toUpperCase() + category.slice(1)} Commands`,
                     description: `**Total Commands : **${commands.length}\n` +
-                        `**Usage : **Slashcommands\n\n` +
+                        `**Usage : **Both Slashcommands and Prefix\n\n` +
                         `${category.charAt(0).toUpperCase() + category.slice(1)} related commands`,
                     commands: commands.map(command => `\`\`${command}\`\``),
                     image: "",
@@ -110,12 +110,18 @@ module.exports = {
                             page.thumbnail = "https://cdn.discordapp.com/attachments/1246408947708072027/1264191552998342687/All_in_one.png?ex=669cf9a1&is=669ba821&hm=eec8a5ec58467205c61757d7b4450785b31dc739e7351f3e5ce230d7eb6fb1d9&";
                             page.author.iconURL = "https://cdn.discordapp.com/attachments/1230824451990622299/1255164064192270418/2861-tool.gif?ex=667c2220&is=667ad0a0&hm=17d2f57af30831b62639fd3d06853a7bc423e1a96b36e5994f432b65aa9f30dc&";
                             break;
-                        case 'music':
+                        case 'distube music':
                             page.image = "https://cdn.discordapp.com/attachments/1246408947708072027/1264191552998342687/All_in_one.png?ex=669cf9a1&is=669ba821&hm=eec8a5ec58467205c61757d7b4450785b31dc739e7351f3e5ce230d7eb6fb1d9&";
                             page.color = "#020202";
                             page.thumbnail = "https://cdn.discordapp.com/attachments/1246408947708072027/1264191552998342687/All_in_one.png?ex=669cf9a1&is=669ba821&hm=eec8a5ec58467205c61757d7b4450785b31dc739e7351f3e5ce230d7eb6fb1d9&";
                             page.author.iconURL = "https://cdn.discordapp.com/attachments/1230824451990622299/1255146656882622554/8693-youtube-music.png?ex=667c11ea&is=667ac06a&hm=b81b2b2d294019d1c647069c9fa4f4ed09d4d3403aa8fdae2555ff6c1c88e0a9&";
                             break;
+                        case 'setups':
+                                page.image = "https://cdn.discordapp.com/attachments/1246408947708072027/1264191161212342282/GlaceYT_1.png?ex=669cf944&is=669ba7c4&hm=3170787ef8dfcde922996ce7bdbaf909c4a18b3e9d757cee8b020ddc70e12c84&";
+                                page.color = "#ff0000";
+                                page.thumbnail = "https://cdn.discordapp.com/attachments/1246408947708072027/1264191552998342687/All_in_one.png?ex=669cf9a1&is=669ba821&hm=eec8a5ec58467205c61757d7b4450785b31dc739e7351f3e5ce230d7eb6fb1d9&";
+                                page.author.iconURL = "https://cdn.discordapp.com/attachments/1230824451990622299/1255164064192270418/2861-tool.gif?ex=667c2220&is=667ad0a0&hm=17d2f57af30831b62639fd3d06853a7bc423e1a96b36e5994f432b65aa9f30dc&";
+                                break;
                         default:
                             break;
                     }
@@ -148,7 +154,7 @@ module.exports = {
                     const page = {
                         title: `${category.charAt(0).toUpperCase() + category.slice(1)} Commands`,
                         description: `**Total Commands : **${commands.length}\n` +
-                            `**Usage : **Prefix commands with \`${config.prefix}\`\n\n` +
+                            `**Usage : **Only Prefix commands with \`${config.prefix}\`\n\n` +
                             `${category.charAt(0).toUpperCase() + category.slice(1)} related commands`,
                         commands: commands.map(command => `\`\`${command.name}\`\``),
                         image: "",
@@ -180,7 +186,7 @@ module.exports = {
                                 page.thumbnail = "https://cdn.discordapp.com/attachments/1246408947708072027/1264191552998342687/All_in_one.png?ex=669cf9a1&is=669ba821&hm=eec8a5ec58467205c61757d7b4450785b31dc739e7351f3e5ce230d7eb6fb1d9&";
                                 page.author.iconURL = "https://cdn.discordapp.com/attachments/1230824451990622299/1230824519220985896/6280-2.gif?ex=667beaa8&is=667a9928&hm=50dfab0b5a63dab7abdc167899c447041b9717016c71e4ffe377a0d7a989d6b5&";
                                 break;
-                            case 'music':
+                            case 'lavalink music':
                                 page.image = "https://cdn.discordapp.com/attachments/1246408947708072027/1264191552998342687/All_in_one.png?ex=669cf9a1&is=669ba821&hm=eec8a5ec58467205c61757d7b4450785b31dc739e7351f3e5ce230d7eb6fb1d9&";
                                 page.color = "#ffcc00";
                                 page.thumbnail = "https://cdn.discordapp.com/attachments/1246408947708072027/1264191552998342687/All_in_one.png?ex=669cf9a1&is=669ba821&hm=eec8a5ec58467205c61757d7b4450785b31dc739e7351f3e5ce230d7eb6fb1d9&";
@@ -237,7 +243,7 @@ module.exports = {
                                 .setDisabled(currentPage === pages.length - 1),
                             new ButtonBuilder()
                                 .setCustomId('prefix')
-                                .setLabel(isPrefixHelp ? 'Slash Command List' : 'Prefix Command List')
+                                .setLabel(isPrefixHelp ? 'Normal Command List' : 'Excess Command List')
                                 .setStyle(ButtonStyle.Secondary)
                         );
                 };

@@ -8,51 +8,17 @@
             "status": true
         },
         "1264193986231271555": {
-            "status": true
+            "status": false
         }
     },
     "excessCommands": {
         "utility": true,
         "other": true,
         "hentai": true,
-        "music": true,
-        "troll": true
+        "lavalink_music": false,
+        "troll": false
     },
-    "spotifyClientId": "f71a3da30e254962965ca2a89d6f74b9",
-    "spotifyClientSecret": "199a619d22dd4e55a4a2c1a7a3d70e63",
-    "guilds": {
-        "1264193986231271555": {
-            "welcomeChannelId": "1264203222793457714",
-            "status": true
-        },
-        "1252159749076553738": {
-            "welcomeChannelId": "1264906095843868742",
-            "status": true
-        }
-    },
-    "tickets": {
-        "1264193986231271555": {
-            "ticketChannelId": "1264203166455566347",
-            "adminRoleId": "1264203077200773191",
-            "status": true
-        }
-    },
-    "voiceChannelSetup": {
-        "1264193986231271555": {
-            "mainVoiceChannelId": "1264207248712929310",
-            "adminRoleId": "1264203077200773191",
-            "managerChannelId": "1264207197022457911",
-            "status": true
-        },
-        "1252159749076553738": {
-            "mainVoiceChannelId": "1264867964650262579",
-            "adminRoleId": "1264868575865213023",
-            "managerChannelId": "1264868000293584969",
-            "status": true
-        }
-    },
-    "music": {
-        "status": true,
+    "lavalink_music": {
         "lavalink": {
             "host": "37.114.42.191",
             "port": 6767,
@@ -60,13 +26,49 @@
             "secure": false
         }
     },
-    "autorole": {
-        "1264193986231271555": {
-            "roleId": "1264203077200773191",
+    "spotifyClientId": "f71a3da30e254962965ca2a89d6f74b9",
+    "spotifyClientSecret": "199a619d22dd4e55a4a2c1a7a3d70e63",
+
+
+
+    "guilds": {
+        "PutGuildIDHere": {
+            "welcomeChannelId": "",
             "status": true
         },
-        "1252159749076553738": {
-            "roleId": "1264868575865213023",
+        "Put2ndGuildIDHere": {
+            "welcomeChannelId": "",
+            "status": true
+        }
+    },
+    "tickets": {
+        "PutGuildIDHere": {
+            "ticketChannelId": "",
+            "adminRoleId": "",
+            "status": true
+        }
+    },
+    "voiceChannelSetup": {
+        "PutGuildIDHere": {
+            "mainVoiceChannelId": "",
+            "adminRoleId": "",
+            "managerChannelId": "",
+            "status": true
+        },
+        "Put2ndGuildIDHere": {
+            "mainVoiceChannelId": "",
+            "adminRoleId": "",
+            "managerChannelId": "",
+            "status": true
+        }
+    },
+    "autorole": {
+        "PutGuildIDHere": {
+            "roleId": "",
+            "status": true
+        },
+        "Put2ndGuildIDHere": {
+            "roleId": "",
             "status": false
         }
     }
