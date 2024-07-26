@@ -267,35 +267,34 @@ client.distube
 
 
 
-const data = require('./UI/banners/musicard'); 
+    const data = require('./UI/banners/musicard'); // Adjust the path if necessary
 
-async function generateMusicCard(song) {
-    try {
-        const randomIndex = Math.floor(Math.random() * data.backgroundImages.length);
-        const backgroundImage = data.backgroundImages[randomIndex];
-        
-       
-
-        const musicCard = await Dynamic({
-            thumbnailImage: song.thumbnail,
-            name: song.name,
-            author: song.formattedDuration,
-            authorColor: "#FF7A00",
-            progress: 50,
-            imageDarkness: 60,
-            backgroundImage: backgroundImage,
-            nameColor: "#FFFFFF",
-            progressColor: "#FF7A00",
-            progressBarColor: "#5F2D00",
-        });
-
-        return musicCard;
-    } catch (error) {
-        console.error('Error generating music card:', error);
-        throw error;
+    async function generateMusicCard(song) {
+        try {
+            // Randomly select a background image
+            const randomIndex = Math.floor(Math.random() * data.backgroundImages.length);
+            const backgroundImage = data.backgroundImages[randomIndex];
+            
+            // Generate the music card with Dynamic
+            const musicCard = await Dynamic({
+                thumbnailImage: song.thumbnail,
+                name: song.name,
+                author: song.formattedDuration,
+                authorColor: "#FF7A00",
+                progress: 50,
+                imageDarkness: 60,
+                backgroundImage: backgroundImage, // Use the selected background image
+                nameColor: "#FFFFFF",
+                progressColor: "#FF7A00",
+                progressBarColor: "#5F2D00",
+            });
+    
+            return musicCard;
+        } catch (error) {
+            console.error('Error generating music card:', error);
+            throw error;
+        }
     }
-}
-
 
 
 function checkWelcomeSetup() {
