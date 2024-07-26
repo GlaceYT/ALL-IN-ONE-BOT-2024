@@ -1,11 +1,13 @@
-const musicbanners = {
+const path = require('path');
+
+const data = {
     backgroundImages: [
-        'https://imgur.com/YQu0P5c',
-        'https://imgur.com/w6yITmS',
-        'https://imgur.com/kPSjrTR',
-        'https://imgur.com/ZYVU49a',
-        'https://imgur.com/f5HOzsM',
+        path.resolve(__dirname, '../../musicimages/1.png'),
+        path.resolve(__dirname, '../../musicimages/2.jpg'),
+        path.resolve(__dirname, '../../musicimages/3.jpg'),
+        path.resolve(__dirname, '../../musicimages/4.jpg'),
+        path.resolve(__dirname, '../../musicimages/5.jpg'),
     ],
 };
 
-module.exports = musicbanners;
+module.exports = data;
