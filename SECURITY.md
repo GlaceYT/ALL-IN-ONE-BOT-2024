@@ -15,8 +15,6 @@ If you discover a security vulnerability, please report it promptly to ensure th
 Contact Information:
 
 Email: official.glaceyt@gmail.com
-Include "Security Vulnerability Report" in the subject line.
-Information to Include:
 
 ## A detailed description of the vulnerability.
 Steps to reproduce the issue.
