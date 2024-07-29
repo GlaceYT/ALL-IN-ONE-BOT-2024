@@ -1,0 +1,74 @@
+{
+    "1252159749076553738": {
+        "owners": [
+            "1004206704994566164",
+            "571670801703763979"
+        ],
+        "admins": [
+            "597000696843206685",
+            "1162771658130587739"
+        ],
+        "logChannelId": "1264870842865553511",
+        "antiSpam": {
+            "enabled": true,
+            "messageCount": 5,
+            "timeWindow": 5000,
+            "action": "timeout",
+            "duration": 60000
+        },
+        "antiLink": {
+            "enabled": false,
+            "mode": "full",
+            "linkInterval": 60000
+        },
+        "antiNuke": {
+            "enabled": false,
+            "channelDeleteLimit": 2,
+            "channelDeleteTime": 10000,
+            "memberKickLimit": 2,
+            "memberBanLimit": 2
+        },
+        "antiRaid": {
+            "enabled": false,
+            "joinLimit": 5,
+            "timeWindow": 60000,
+            "action": "kick"
+        }
+    },
+    "1262750919905247233": {
+        "owners": [
+            "1004206704994566164",
+            "ownerID2"
+        ],
+        "admins": [
+            "adminID1",
+            "adminID2"
+        ],
+        "logChannelId": "1264870842865553511",
+        "antiSpam": {
+            "enabled": true,
+            "messageCount": 5,
+            "timeWindow": 5000,
+            "action": "timeout",
+            "duration": 60000
+        },
+        "antiLink": {
+            "enabled": true,
+            "mode": "full",
+            "linkInterval": 60000
+        },
+        "antiNuke": {
+            "enabled": true,
+            "channelDeleteLimit": 2,
+            "channelDeleteTime": 10000,
+            "memberKickLimit": 2,
+            "memberBanLimit": 2
+        },
+        "antiRaid": {
+            "enabled": true,
+            "joinLimit": 5,
+            "timeWindow": 60000,
+            "action": "kick"
+        }
+    }
+}

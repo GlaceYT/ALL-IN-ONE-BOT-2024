@@ -1,0 +1,111 @@
+{
+    "token": "",
+    "prefixes": {
+        "default": "!",
+        "server_specific": {
+            "1252159749076553738": "/",
+            "1106591466651922502": "."
+        }
+    },
+    "youtubeapi": "AIzaSyAholYB1sYcBuZu5pKfB0RTmLWyPG7rN44",
+    "geniusToken": "0CHr9jtPjR7EKraXUVv6__8ELmEwFeUwt5vYAhk-is_fGOq-10-epdMzESkMPUnf",
+    "hentaicommands": {
+        "1252159749076553738": {
+            "status": false
+        },
+        "1264193986231271555": {
+            "status": false
+        },
+        "1262750919905247233": {
+            "status": false
+        },
+        "1106591466651922502": {
+            "status": true
+        }
+    },
+    "excessCommands": {
+        "utility": true,
+        "other": true,
+        "hentai": true,
+        "lavalink": true,
+        "troll": true
+    },
+    "lavalink": {
+        "lavalink": {
+            "host": "37.114.42.191",
+            "port": 6767,
+            "password": "danteisnttaken",
+            "secure": false
+        }
+    },
+    "spotifyClientId": "f71a3da30e254962965ca2a89d6f74b9",
+    "spotifyClientSecret": "199a619d22dd4e55a4a2c1a7a3d70e63",
+    "guilds": {
+        "PutGuildIDHere": {
+            "welcomeChannelId": "",
+            "status": true
+        },
+        "Put2ndGuildIDHere": {
+            "welcomeChannelId": "",
+            "status": true
+        },
+        "1252159749076553738": {
+            "welcomeChannelId": "1264906095843868742",
+            "status": false
+        },
+        "1106591466651922502": {
+            "welcomeChannelId": "1267401094967984148",
+            "status": true
+        }
+    },
+    "tickets": {
+        "1264193986231271555": {
+            "ticketChannelId": "1266651753902772224",
+            "adminRoleId": "1264203077200773191",
+            "status": true
+        },
+        "1106591466651922502": {
+            "ticketChannelId": "1267404603608006748",
+            "adminRoleId": "1267134214738939944",
+            "status": true
+        }
+    },
+    "voiceChannelSetup": {
+        "1264193986231271555": {
+            "mainVoiceChannelId": "1266678551151775794",
+            "adminRoleId": "1264203077200773191",
+            "managerChannelId": "1264207074909360179",
+            "status": true
+        },
+        "1252159749076553738": {
+            "mainVoiceChannelId": "1264867964650262579",
+            "adminRoleId": "1264868575865213023",
+            "managerChannelId": "1264868000293584969",
+            "status": true
+        },
+        "1106591466651922502": {
+            "mainVoiceChannelId": "1267406731919491082",
+            "adminRoleId": "1267134214738939944",
+            "managerChannelId": "1267406750693326858",
+            "status": true
+        }
+    },
+    "autorole": {
+        "PutGuildIDHere": {
+            "roleId": "",
+            "status": true
+        },
+        "1252159749076553738": {
+            "roleId": "1264868575865213023",
+            "status": true
+        },
+        "1106591466651922502": {
+            "roleId": "1267134214738939944",
+            "status": true
+        }
+    },
+    "owners": {
+        "1252159749076553738": "1162771658130587739",
+        "1106591466651922502": "1162771658130587739"
+    }
+}
