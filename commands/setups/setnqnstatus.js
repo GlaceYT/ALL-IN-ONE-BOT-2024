@@ -4,7 +4,7 @@ const path = require('path');
 const cmdIcons = require('../../UI/icons/commandicons');
 
 const configPath = path.join(__dirname, '../../config.json');
-const nqnConfigPath = path.join(__dirname, '../../nqnconfig.json');
+const nqnConfigPath = path.join(__dirname, '../../nqnConfig.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
