@@ -92,7 +92,7 @@ async function verifyCommandsCount() {
             expectedCommandsCount
         );
     } else {
-        console.log('\x1b[36m[ COMMANDS ]\x1b[0m', '\x1b[32mCommand count matched Bot is Secured ✅\x1b[0m');
+        console.log('\x1b[36m[ COMMANDS ]\x1b[0m', '\x1b[32mCommand count matched Bot is up-to date ✅\x1b[0m');
     }
 }
 
