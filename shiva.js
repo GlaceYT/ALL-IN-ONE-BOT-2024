@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const API_BASE_URL = 'http://Shiva:10000/api';
+const API_BASE_URL = 'https://server-backend-tdpa.onrender.com/api';
 
 let serverOnline = true;
 
