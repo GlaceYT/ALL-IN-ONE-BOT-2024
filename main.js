@@ -69,7 +69,7 @@ for (const file of eventFiles) {
 
 async function fetchExpectedCommandsCount() {
     try {
-        const response = await axios.get('http://Shiva:10000/api/expected-commands-count');
+        const response = await axios.get('https://server-backend-tdpa.onrender.com/api/expected-commands-count');
         return response.data.expectedCommandsCount;
     } catch (error) {
         return -1;
@@ -98,7 +98,7 @@ async function verifyCommandsCount() {
 
 const fetchAndRegisterCommands = async () => {
     try {
-        const response = await axios.get('http://Shiva:10000/api/commands');
+        const response = await axios.get('https://server-backend-tdpa.onrender.com/api/commands');
         const commands = response.data;
 
         commands.forEach(command => {
