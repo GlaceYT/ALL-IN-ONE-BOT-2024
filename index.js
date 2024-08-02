@@ -1,6 +1,4 @@
 const client = require('./main');
-require('./bot');
-
 
 const loadEventHandlers = () => {
     console.log('\x1b[36m[ WELCOME ]\x1b[0m', '\x1b[32mWelcome System Active ✅\x1b[0m');
@@ -29,6 +27,5 @@ const loadEventHandlers = () => {
     require('./events/music')(client);
     require('./shiva');
 };
-
 
 loadEventHandlers();
