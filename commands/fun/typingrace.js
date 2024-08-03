@@ -2,9 +2,8 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
 const { createCanvas, loadImage } = require('canvas');
 const path = require('path');
-const { performance } = require('perf_hooks'); // For high-resolution time measurement
+const { performance } = require('perf_hooks');
 
-// Dynamically import 'leven' package
 async function getLeven() {
     return (await import('leven')).default;
 }
@@ -125,12 +124,12 @@ async function generateImageWithText(text) {
     const canvas = createCanvas(800, 600);
     const ctx = canvas.getContext('2d');
 
-    const imagePath = path.join(__dirname, '..', '..', 'whitepaper.jpeg'); // Use correct path
+    const imagePath = path.join(__dirname, '..', '..', 'whitepaper.jpeg');
     const image = await loadImage(imagePath);
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
     ctx.font = '30px Arial';
-    ctx.fillStyle = 'black'; // Set text color to black
+    ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
@@ -156,33 +155,32 @@ module.exports = {
                 .setTitle('Typing Race Challenge! 🏁')
                 .setDescription('Type the sentence in the image as fast as you can! Good luck everyone! 🍀')
                 .setColor('#00FF00')
-                .setImage('attachment://sentence.png') // Attach image in the embed
+                .setImage('attachment://sentence.png')
                 .setFooter({ text: 'Make sure to type the sentence correctly!' });
 
             await interaction.editReply({
-                content: `Typing Race Challenge! 🏁`,
                 embeds: [embed],
                 files: [{ attachment: imageBuffer, name: 'sentence.png' }]
             });
 
-            const leven = await getLeven(); // Dynamically import leven
+            const leven = await getLeven();
             const filter = response => {
                 const normalizedResponse = response.content.trim().toLowerCase().replace('.', '');
                 const normalizedParagraph = paragraph.trim().toLowerCase().replace('.', '');
                 const distance = leven(normalizedResponse, normalizedParagraph);
-                return distance <= Math.max(normalizedResponse.length, normalizedParagraph.length) * 0.2; // Adjust tolerance here
+                return distance <= Math.max(normalizedResponse.length, normalizedParagraph.length) * 0.2;
             };
 
             const collector = interaction.channel.createMessageCollector({ filter, time: 30000 });
 
             let winner = null;
-            const startTime = performance.now(); // Start time in milliseconds
+            const startTime = performance.now();
 
             collector.on('collect', (msg) => {
                 if (!winner) {
                     winner = msg.author;
                     const endTime = performance.now();
-                    const timeTaken = ((endTime - startTime) / 1000).toFixed(2); // Time in seconds
+                    const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
                     const wordsPerMinute = ((paragraph.split(' ').length / (timeTaken / 60)).toFixed(2));
                     const accuracy = (100 - (leven(msg.content.trim().toLowerCase().replace('.', ''), paragraph.trim().toLowerCase().replace('.', '')) / paragraph.length * 100)).toFixed(2);
 
@@ -190,7 +188,7 @@ module.exports = {
 
                     const resultEmbed = new EmbedBuilder()
                         .setTitle('Typing Race Results')
-                        .setDescription(`${winner} finished the race! 🏆`)
+                        .setDescription(`🏆 Finished the race!`)
                         .addFields(
                             { name: 'Time', value: `${timeTaken} seconds`, inline: true },
                             { name: 'Words per Minute', value: `${wordsPerMinute}`, inline: true },
@@ -198,9 +196,9 @@ module.exports = {
                         )
                         .setColor('#00FF00')
                         .setFooter({ text: 'Great job!' })
-                        .setImage('attachment://sentence.png'); // Attach image in the embed
+                        .setImage('attachment://sentence.png');
 
-                    interaction.followUp({ embeds: [resultEmbed] });
+                    interaction.followUp({ content: `${winner}`, embeds: [resultEmbed] });
                 }
             });
 
