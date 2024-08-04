@@ -86,7 +86,7 @@ module.exports = {
                     return interaction.reply({ content: 'There was an error writing to the config file.', ephemeral: true });
                 }
 
-                interaction.reply({ content: `Ticket channel updated successfully for server ID ${serverId}. ✅ Please Restart Bot!`, ephemeral: true });
+                interaction.reply({ content: `Ticket channel updated successfully for server ID ${serverId}`, ephemeral: true });
             });
         });
     }else {
