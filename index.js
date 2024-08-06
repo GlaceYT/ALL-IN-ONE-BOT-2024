@@ -1,5 +1,4 @@
 const client = require('./main');
-require('./bot');
 
 
 const loadEventHandlers = () => {
