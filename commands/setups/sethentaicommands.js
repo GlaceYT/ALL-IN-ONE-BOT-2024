@@ -1,16 +1,23 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
 const { hentaiCommandCollection } = require('../../mongodb'); 
 const cmdIcons = require('../../UI/icons/commandicons');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('sethentaicommands')
         .setDescription('Enable or disable hentai commands')
+        .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
         .addBooleanOption(option =>
             option.setName('status')
                 .setDescription('Enable or disable hentai commands')
                 .setRequired(true)),
     async execute(interaction) {
         if (interaction.isCommand && interaction.isCommand()) {
+            if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+                const embed = new EmbedBuilder()
+                    .setColor('#ff0000')
+                    .setDescription('You do not have permission to use this command.');
+                return interaction.reply({ embeds: [embed], ephemeral: true });
+            }
         const status = interaction.options.getBoolean('status');
         const serverId = interaction.guild.id;
 
