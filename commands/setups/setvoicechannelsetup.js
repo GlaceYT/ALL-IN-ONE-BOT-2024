@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
 const { voiceChannelCollection } = require('../../mongodb');
 const { sendOrUpdateCentralizedEmbed, loadConfig } = require('../../events/voiceChannelHandler');
 const cmdIcons = require('../../UI/icons/commandicons');
@@ -6,6 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('setvoicechannelsetup')
         .setDescription('Set the voice channel for a server')
+        .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
         .addStringOption(option =>
             option.setName('serverid')
                 .setDescription('The ID of the server')
@@ -24,6 +25,12 @@ module.exports = {
                 .setRequired(true)),
     async execute(interaction) {
         if (interaction.isCommand && interaction.isCommand()) {
+            if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+                const embed = new EmbedBuilder()
+                    .setColor('#ff0000')
+                    .setDescription('You do not have permission to use this command.');
+                return interaction.reply({ embeds: [embed], ephemeral: true });
+            }
         const serverId = interaction.options.getString('serverid');
         const voiceChannelId = interaction.options.getString('voicechannelid');
         const managerChannelId = interaction.options.getString('managerchannelid');
