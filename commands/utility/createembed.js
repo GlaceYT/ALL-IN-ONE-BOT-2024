@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
 const cmdIcons = require('../../UI/icons/commandicons');
 const lang = require('../../events/loadLanguage');
 
@@ -6,6 +6,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('createembed')
     .setDescription(lang.createembedDescription)
+    .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
     .addChannelOption(option => 
       option.setName('channel')
         .setDescription(lang.createembedChannel)
@@ -65,6 +66,12 @@ module.exports = {
 
   async execute(interaction) {
     if (interaction.isCommand && interaction.isCommand()) { 
+      if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+        const embed = new EmbedBuilder()
+            .setColor('#ff0000')
+            .setDescription('You do not have permission to use this command.');
+        return interaction.reply({ embeds: [embed], ephemeral: true });
+    }
       const channel = interaction.options.getChannel('channel');
       const color = interaction.options.getString('color');
       const title = interaction.options.getString('title');
