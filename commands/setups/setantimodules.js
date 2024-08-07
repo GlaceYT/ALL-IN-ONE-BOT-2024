@@ -1,10 +1,11 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
 const { antisetupCollection } = require('../../mongodb');
 const cmdIcons = require('../../UI/icons/commandicons');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('antisetup')
         .setDescription('Configure anti-protection settings')
+        .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
         .addSubcommand(subcommand =>
             subcommand
                 .setName('initial')
@@ -55,6 +56,12 @@ module.exports = {
 
     async execute(interaction) {
         if (interaction.isCommand && interaction.isCommand()) {
+            if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+                const embed = new EmbedBuilder()
+                    .setColor('#ff0000')
+                    .setDescription('You do not have permission to use this command.');
+                return interaction.reply({ embeds: [embed], ephemeral: true });
+            }
         const subcommand = interaction.options.getSubcommand();
         const serverId = interaction.guild.id; 
         const memberId = interaction.user.id;
