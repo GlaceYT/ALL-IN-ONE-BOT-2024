@@ -1,10 +1,11 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
 const { nqnCollection } = require('../../mongodb');
 const cmdIcons = require('../../UI/icons/commandicons');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setnqnstatus')
         .setDescription('Set the NQN status for a server')
+        .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
         .addStringOption(option =>
             option.setName('serverid')
                 .setDescription('The ID of the server')
@@ -15,6 +16,12 @@ module.exports = {
                 .setRequired(true)),
     async execute(interaction) {
         if (interaction.isCommand && interaction.isCommand()) {
+            if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+                const embed = new EmbedBuilder()
+                    .setColor('#ff0000')
+                    .setDescription('You do not have permission to use this command.');
+                return interaction.reply({ embeds: [embed], ephemeral: true });
+            }
         const serverId = interaction.options.getString('serverid');
         const status = interaction.options.getBoolean('status');
         const guild = interaction.guild;
