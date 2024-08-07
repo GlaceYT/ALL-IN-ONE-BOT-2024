@@ -1,5 +1,5 @@
 const musicIcons = {
-    footerIcon: 'https://cdn.discordapp.com/emojis/1111181271960399935.gif', 
+    footerIcon: 'https://cdn.discordapp.com/emojis/799859930181402645.gif', 
     correctIcon: 'https://cdn.discordapp.com/emojis/819446784647757834.gif', 
     playerIcon: 'https://cdn.discordapp.com/emojis/763415718271385610.gif',
     wrongIcon: 'https://cdn.discordapp.com/attachments/1230824451990622299/1236666647000125490/9596-wrong.gif?ex=667e0dd0&is=667cbc50&hm=5e30a7f4ad283075fb7430de42fb7985a13eac81f4323110272875ef007fb786&',
