@@ -46,39 +46,31 @@
 
 ### Step 1: Update `config.json`
 
-1. Open the `config.json` file in your project directory.
-2. Locate the field `guild` and replace the placeholder ID with your server ID.
-3. Replace every instance of `1217139049437860060` with your server ID throughout the `config.json` file.
+1. Open the `config.json` and add your mongodb url.
 
-### Step 2: Find Your Server ID
-
-1. In Discord, right-click on your server’s name and select "Copy ID".
-2. Right-click on your server’s roles (such as mod and admin) and select "Copy ID" for each role.
-3. Replace all relevant IDs in the `config.json` file with the copied server and role IDs.
-
-### Step 3: Set Up Hosting Service
+### Step 2: Set Up Hosting Service
 
 1. Go to your preferred hosting service. For this guide, we use [Render](https://render.com/).
 2. In the Build & Deploy section, paste your repository URL.
 
 
-### Step 4: Add Build and Start Commands
+### Step 3: Add Build and Start Commands
  Run the following commands to install dependencies and start your bot:
 
    npm install
    node index.js
 
-### Step 5: Get Your Bot Token
+### Step 4: Get Your Bot Token
 Navigate to the Discord Developer Portal.
 Find your application, and retrieve the bot token from the "Bot" section.
 
-### Step 6: Set Environment Variable
+### Step 5: Set Environment Variable
 Create an environment variable with the following details:
 Key: TOKEN
 Value: [your bot token]
 Deploy your application using your hosting service’s deployment process.
 
-### Step 7: Wait and Test
+### Step 6: Wait and Test
 Wait approximately five minutes for your bot to deploy and start up.
 
 Test your bot by sending commands to ensure it is operational.
