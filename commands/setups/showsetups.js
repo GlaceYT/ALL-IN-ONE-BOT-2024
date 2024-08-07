@@ -1,12 +1,20 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
 const { ticketsCollection, voiceChannelCollection, nqnCollection, welcomeCollection, giveawayCollection, autoroleCollection, serverConfigCollection, antisetupCollection } = require('../../mongodb');
 const cmdIcons = require('../../UI/icons/commandicons');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('showsetups')
-        .setDescription('Displays the ticket, voice channel, NQN, welcome, auto-role, and anti setups for this server'),
+        .setDescription('Displays the ticket, voice channel, NQN, welcome, auto-role, and anti setups for this server')
+        .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels),
     async execute(interaction) {
+
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+            const embed = new EmbedBuilder()
+                .setColor('#ff0000')
+                .setDescription('You do not have permission to use this command.');
+            return interaction.reply({ embeds: [embed], ephemeral: true });
+        }
         const guildId = interaction.guild.id;
 
         try {
