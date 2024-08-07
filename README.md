@@ -83,11 +83,6 @@ Video Tutorial: If you prefer a video guide, watch this YouTube tutorial [ Soon 
 Common Errors: Consult the errors section for troubleshooting.
 
 ### Useful Files
-message.json: Contains the welcome message; replace the ID with your server channel ID.
-
-config.json: Bot configuration file; replace all IDs with your server and role IDs. Set settings to true or false.
-
-antisetup.json: Anti-nuke setup; input all necessary information and IDs.
 
 events/ready.js: Bot status configuration.
 
