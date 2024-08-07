@@ -1,10 +1,11 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
 const { serverConfigCollection } = require('../../mongodb'); 
 const cmdIcons = require('../../UI/icons/commandicons');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setserverconfig')
         .setDescription('Set the owner ID and prefix for a specific server')
+        .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
         .addStringOption(option =>
             option.setName('serverid')
                 .setDescription('The ID of the server')
@@ -19,6 +20,12 @@ module.exports = {
                 .setRequired(true)),
     async execute(interaction) {
         if (interaction.isCommand && interaction.isCommand()) {
+            if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+                const embed = new EmbedBuilder()
+                    .setColor('#ff0000')
+                    .setDescription('You do not have permission to use this command.');
+                return interaction.reply({ embeds: [embed], ephemeral: true });
+            }
         const serverId = interaction.options.getString('serverid');
         const ownerId = interaction.options.getString('ownerid');
         const prefix = interaction.options.getString('prefix');
