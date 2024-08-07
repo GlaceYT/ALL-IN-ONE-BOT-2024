@@ -1,51 +1,12 @@
 const { Manager } = require('erela.js');
-const Spotify = require('erela.js-spotify');
 const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const config = require('../config.json');
-const axios = require('axios');
 const { Dynamic } = require("musicard");
 const fs = require('fs');
 const musicIcons = require('../UI/icons/musicicons');
 
-async function getSpotifyToken() {
-    const response = await axios.post('https://accounts.spotify.com/api/token', null, {
-        params: {
-            grant_type: 'client_credentials'
-        },
-        headers: {
-            'Authorization': `Basic ${Buffer.from(`${config.spotifyClientId}:${config.spotifyClientSecret}`).toString('base64')}`,
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    });
-    return response.data.access_token;
-}
-
-async function getSpotifyTrackId(token, songName) {
-    const response = await axios.get('https://api.spotify.com/v1/search', {
-        params: {
-            q: songName,
-            type: 'track',
-            limit: 1
-        },
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
-    const track = response.data.tracks.items[0];
-    return track ? track.id : null;
-}
-
-async function getSpotifyThumbnail(token, trackId) {
-    const response = await axios.get(`https://api.spotify.com/v1/tracks/${trackId}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
-    return response.data.album.images[0]?.url || '';
-}
-
 module.exports = (client) => {
-    
+
     if (config.excessCommands.lavalink) {
         client.manager = new Manager({
             nodes: [
@@ -55,12 +16,6 @@ module.exports = (client) => {
                     password: config.lavalink.lavalink.password,
                     secure: config.lavalink.lavalink.secure
                 }
-            ],
-            plugins: [
-                new Spotify({
-                    clientID: config.spotifyClientId,
-                    clientSecret: config.spotifyClientSecret
-                })
             ],
             send(id, payload) {
                 const guild = client.guilds.cache.get(id);
@@ -73,24 +28,20 @@ module.exports = (client) => {
         });
 
         client.manager.on('nodeError', (node, error) => {
-            if (error.message.includes('Unexpected op "ready"')) {
-                return;
-            }
-            console.error(`\x1b[31m[ERROR]\x1b[0m Node \x1b[32m${node.options.identifier}\x1b[0m had an error: \x1b[33m${error.message}\x1b[0m`);
+            //console.error(`\x1b[31m[ LAVALINK ]\x1b[0m Node \x1b[32m${node.options.identifier}\x1b[0m had an error: \x1b[33m${error.message}\x1b[0m`);
         });
 
         client.manager.on('trackStart', async (player, track) => {
             const channel = client.channels.cache.get(player.textChannel);
 
             try {
-                const accessToken = await getSpotifyToken();
-                const trackId = await getSpotifyTrackId(accessToken, track.title);
-
-                if (!trackId) {
-                    throw new Error(`Track ID not found for song: ${track.title}`);
+                // Assuming the track URI is a YouTube link, you can extract the video ID and use it to fetch a thumbnail
+                let thumbnailUrl = '';
+                if (track.uri.includes('youtube.com') || track.uri.includes('youtu.be')) {
+                    const videoId = track.uri.split('v=')[1] || track.uri.split('/').pop();
+                    thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
                 }
 
-                const thumbnailUrl = await getSpotifyThumbnail(accessToken, trackId);
                 const data = require('../UI/banners/musicard');
                 const randomIndex = Math.floor(Math.random() * data.backgroundImages.length);
                 const backgroundImage = data.backgroundImages[randomIndex];
