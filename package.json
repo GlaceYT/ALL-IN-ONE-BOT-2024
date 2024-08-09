@@ -47,6 +47,7 @@
     "isomorphic-unfetch": "^4.0.2",
     "lavacord": "^1.1.9",
     "lavalink": "^2.13.0",
+    "leven": "^4.0.0",  
     "libsodium-wrappers": "^0.7.13",
     "memejs": "^2.0.1",
     "moonlink": "^1.0.0",
