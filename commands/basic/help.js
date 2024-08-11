@@ -84,14 +84,14 @@ module.exports = {
                     title: 'Bot Information',
                     description: `Welcome to the help command! This bot provides a variety of commands to enhance your server experience. Below are the categories and the number of commands available in each.`,
                     commands: [
-                        `**💜 Bot Developer:** GlaceYT\n`,
-                        `**Bot Version:** 1.0.0\n`,
-                        `**Total Servers:** ${totalServers}\n`,
-                        `**Total Members:** ${totalMembers}\n`,
-                        `**Bot Uptime:** ${uptimeHours}h ${uptimeMinutes}m ${uptimeSeconds}s\n`,
-                        `**Total Commands:** ${totalCommands}\n`,
-                        `**Enabled Categories:** ${enabledCategoriesList.join(', ')}\n`,
-                        `**Disabled Categories:** ${disabledCategoriesList.join(', ')}\n`
+                        `**💜 Bot Developer:** GlaceYT\n`+
+                        `**Bot Version:** 1.0.0\n`+
+                        `**Total Servers:** ${totalServers}\n`+
+                        `**Total Members:** ${totalMembers}\n`+
+                        `**Bot Uptime:** ${uptimeHours}h ${uptimeMinutes}m ${uptimeSeconds}s\n`+
+                        `**Total Commands:** ${totalCommands}\n`+
+                        `**Enabled Categories:** ${enabledCategoriesList.join(', ')}\n`+
+                        `**Disabled Categories:** ${disabledCategoriesList.join(', ')}\n`,
                     ],
                     image: "https://cdn.discordapp.com/attachments/1264134884432285766/1270352605154902151/GlaceYT.gif?ex=66b3638f&is=66b2120f&hm=23878b54affd61573b105db7c1c016eb730911dc762b3fbabac5a32cbc884119&",
                     color: "#3498db",
@@ -242,14 +242,14 @@ module.exports = {
                     title: 'Bot Information',
                     description: `Welcome to the help command! This bot provides a variety of commands to enhance your server experience. Below are the categories and the number of commands available in each.`,
                     commands: [
-                        `**💜 Bot Developer:** GlaceYT\n`,
-                        `**Bot Version:** 1.0.0\n`,
-                        `**Total Servers:** ${totalServers}\n`,
-                        `**Total Members:** ${totalMembers}\n`,
-                        `**Bot Uptime:** ${uptimeHours}h ${uptimeMinutes}m ${uptimeSeconds}s\n`,
-                        `**Total Commands:** ${totalCommands}\n`,
-                        `**Enabled Categories:** ${enabledCategoriesList.join(', ')}\n`,
-                        `**Disabled Categories:** ${disabledCategoriesList.join(', ')}\n`
+                        `**💜 Bot Developer:** GlaceYT\n`+
+                        `**Bot Version:** 1.0.0\n`+
+                        `**Total Servers:** ${totalServers}\n`+
+                        `**Total Members:** ${totalMembers}\n`+
+                        `**Bot Uptime:** ${uptimeHours}h ${uptimeMinutes}m ${uptimeSeconds}s\n`+
+                        `**Total Commands:** ${totalCommands}\n`+
+                        `**Enabled Categories:** ${enabledCategoriesList.join(', ')}\n`+
+                        `**Disabled Categories:** ${disabledCategoriesList.join(', ')}\n`,
                     ],
                     image: "https://cdn.discordapp.com/attachments/1264134884432285766/1270352605154902151/GlaceYT.gif?ex=66b3638f&is=66b2120f&hm=23878b54affd61573b105db7c1c016eb730911dc762b3fbabac5a32cbc884119&",
                     color: "#3498db",
