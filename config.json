@@ -2,7 +2,7 @@
     "token": "",
     "language": "en",
     "prefix": "!",
-    "mongodbUri": "",
+    "mongodbUri": "mongodb+srv://sestro:sestro@cluster0.zldd64l.mongodb.net/?retryWrites=true&w=majority",
     "geniusToken": "0CHr9jtPjR7EKraXUVv6__8ELmEwFeUwt5vYAhk-is_fGOq-10-epdMzESkMPUnf",
     "excessCommands": {
         "utility": true,
