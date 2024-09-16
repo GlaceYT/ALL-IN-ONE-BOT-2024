@@ -57,7 +57,7 @@
 ### Step 3: Add Build and Start Commands
  Run the following commands to install dependencies and start your bot:
 
-   npm install
+   npm install, 
    node index.js
 
 ### Step 4: Get Your Bot Token
