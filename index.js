@@ -27,7 +27,7 @@ const loadEventHandlers = () => {
     console.log('\x1b[36m[ NQN Module ]\x1b[0m', '\x1b[32mEmoji System Active ✅\x1b[0m');
     emojiHandler(client);
     require('./events/music')(client);
-    require('./shiva');
+    require('./zephyr');
 };
 
 
