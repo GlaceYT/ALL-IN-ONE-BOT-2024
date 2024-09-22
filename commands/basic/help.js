@@ -95,7 +95,7 @@ module.exports = {
                     ],
                     image: "https://cdn.discordapp.com/attachments/1279306679787458561/1287269267154145301/standard.gif?ex=66f0ee6d&is=66ef9ced&hm=bbafd7ec16c87917cfe0e8644ba5b268341f63cabeded92c4d7ba2bb74ccadf7&",
                     color: "#3498db",
-                    thumbnail: "https://cdn.discordapp.com/attachments/1264134884432285766/1270353776489922651/s_removed.png?ex=66b364a6&is=66b21326&hm=2d4ded259b57f476c901c58401e1d6faba2653c0a964ee1c4f371ecf3da52100&",
+                    thumbnail: "https://cdn.discordapp.com/attachments/1279306679787458561/1287269267154145301/standard.gif?ex=66f0ee6d&is=66ef9ced&hm=bbafd7ec16c87917cfe0e8644ba5b268341f63cabeded92c4d7ba2bb74ccadf7&",
                     author: {
                         name: 'All In One',
                         iconURL: "https://cdn.discordapp.com/attachments/1246408947708072027/1255167194036437093/1558-zerotwo-exciteddance.gif?ex=667c250a&is=667ad38a&hm=09e6db36fd79436eb57de466589f21ca947329edd69b8e591d0f6586b89df296&",
