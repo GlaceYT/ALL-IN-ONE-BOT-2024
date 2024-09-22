@@ -8,7 +8,7 @@
         "utility": true,
         "other": true,
         "hentai": false,
-        "lavalink": false,
+        "lavalink": true,
         "troll": true
     },
     "categories": {
