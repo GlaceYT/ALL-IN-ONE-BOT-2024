@@ -71,7 +71,7 @@ module.exports = async (client) => {
                 const attachment = new AttachmentBuilder(card, { name: 'welcome.png' });
 
                 const embed = new EmbedBuilder()
-                    .setTitle("Welcome to the Server!")
+                    .setTitle("Welcome to the NOTORIOUS 47!")
                     .setDescription(`${member}! You are the **${memberCount}${suffix}** member of our server!`)
                     .setColor("#00e5ff")
                     .setThumbnail(member.user.displayAvatarURL())
