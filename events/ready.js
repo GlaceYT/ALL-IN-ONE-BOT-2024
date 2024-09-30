@@ -6,9 +6,9 @@ module.exports = {
     execute(client) {
   
         const activities = [
-            { name: 'N47 DC', type: ActivityType.Watching },
-            { name: 'With N47', type: ActivityType.Playing },
-            { name: 'Sanandreas Multiplayer', type: ActivityType.Playing },
+            { name: 'Players', type: ActivityType.Watching },
+            { name: 'GTA VI', type: ActivityType.Playing },
+            { name: 'N47 Members', type: ActivityType.Watching },
             { name: 'Spotify', type: ActivityType.Listening },
         ];
 
@@ -35,15 +35,3 @@ module.exports = {
             currentActivityIndex = (currentActivityIndex + 1) % activities.length;
             currentStatusIndex = (currentStatusIndex + 1) % statuses.length;
         }
-
-        
-        setTimeout(() => {
-            setActivityAndStatus();
-            console.log('\x1b[31m[ CORE ]\x1b[0m \x1b[32m%s\x1b[0m', 'Bot Activity Set Successful ✅');
-        }, 2000);
-
-        setInterval(() => {
-            setActivityAndStatus();
-        }, 6000);
-    },
-};
