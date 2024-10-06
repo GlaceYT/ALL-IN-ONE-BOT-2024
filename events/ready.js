@@ -6,9 +6,9 @@ module.exports = {
     execute(client) {
   
         const activities = [
-            { name: 'Netflix', type: ActivityType.Watching },
+            { name: 'Players', type: ActivityType.Watching },
             { name: 'GTA VI', type: ActivityType.Playing },
-            { name: 'on YouTube', type: ActivityType.Streaming },
+            { name: 'N47 Members', type: ActivityType.Watching },
             { name: 'Spotify', type: ActivityType.Listening },
         ];
 
@@ -36,7 +36,6 @@ module.exports = {
             currentStatusIndex = (currentStatusIndex + 1) % statuses.length;
         }
 
-        
         setTimeout(() => {
             setActivityAndStatus();
             console.log('\x1b[31m[ CORE ]\x1b[0m \x1b[32m%s\x1b[0m', 'Bot Activity Set Successful ✅');
