@@ -64,7 +64,6 @@
     "random-memes": "^3.2.6",
     "request": "^2.88.2",
     "riffy": "^1.0.6",
-    "sharp": "^0.33.4",
     "shoukaku": "^4.0.1",
     "sqlite3": "^5.1.7",
     "undici": "^6.18.2",
