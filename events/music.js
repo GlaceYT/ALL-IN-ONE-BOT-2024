@@ -1,104 +1,208 @@
-const { Manager } = require('erela.js');
-const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
+const { EmbedBuilder, AttachmentBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const config = require('../config.json');
-const { Dynamic } = require("musicard");
+const { dynamicCard } = require("songcard");
 const fs = require('fs');
+const path = require('path');
 const musicIcons = require('../UI/icons/musicicons');
+const { Riffy } = require('riffy');
 
 module.exports = (client) => {
-
     if (config.excessCommands.lavalink) {
-        client.manager = new Manager({
-            nodes: [
-                {
-                    host: config.lavalink.lavalink.host,
-                    port: config.lavalink.lavalink.port,
-                    password: config.lavalink.lavalink.password,
-                    secure: config.lavalink.lavalink.secure
-                }
-            ],
-            send(id, payload) {
-                const guild = client.guilds.cache.get(id);
-                if (guild) guild.shard.send(payload);
+        const nodes = [
+            {
+                host: config.lavalink.lavalink.host,
+                password: config.lavalink.lavalink.password,
+                port: config.lavalink.lavalink.port,
+                secure: config.lavalink.lavalink.secure
             }
+        ];
+
+        client.riffy = new Riffy(client, nodes, {
+            send: (payload) => {
+                const guild = client.guilds.cache.get(payload.d.guild_id);
+                if (guild) guild.shard.send(payload);
+            },
+            defaultSearchPlatform: "ytmsearch",
+            restVersion: "v4",
         });
 
-        client.manager.on('nodeConnect', node => {
-            console.log(`\x1b[34m[ LAVALINK CONNECTION ]\x1b[0m Node connected: \x1b[32m${node.options.identifier}\x1b[0m`);
+        client.riffy.on('nodeConnect', (node) => {
+            console.log(`\x1b[34m[ LAVALINK CONNECTION ]\x1b[0m Node connected: \x1b[32m${node.name}\x1b[0m`);
         });
 
-        client.manager.on('nodeError', (node, error) => {
-            //console.error(`\x1b[31m[ LAVALINK ]\x1b[0m Node \x1b[32m${node.options.identifier}\x1b[0m had an error: \x1b[33m${error.message}\x1b[0m`);
+        client.riffy.on('nodeError', (node, error) => {
+            console.error(`\x1b[31m[ LAVALINK ]\x1b[0m Node \x1b[32m${node.name}\x1b[0m had an error: \x1b[33m${error.message}\x1b[0m`);
         });
 
-        client.manager.on('trackStart', async (player, track) => {
+        client.riffy.on('trackStart', async (player, track) => {
             const channel = client.channels.cache.get(player.textChannel);
-
+            
             try {
-                // Assuming the track URI is a YouTube link, you can extract the video ID and use it to fetch a thumbnail
-                let thumbnailUrl = '';
-                if (track.uri.includes('youtube.com') || track.uri.includes('youtu.be')) {
-                    const videoId = track.uri.split('v=')[1] || track.uri.split('/').pop();
-                    thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                // Disable previous message's buttons if exists
+                if (player.currentMessageId) {
+                    const oldMessage = await channel.messages.fetch(player.currentMessageId);
+                    if (oldMessage) {
+                        const disabledComponents = oldMessage.components.map(row => {
+                            return new ActionRowBuilder().addComponents(
+                                row.components.map(button => ButtonBuilder.from(button).setDisabled(true))
+                            );
+                        });
+                        await oldMessage.edit({ components: disabledComponents });
+                    }
                 }
 
-                const data = require('../UI/banners/musicard');
-                const randomIndex = Math.floor(Math.random() * data.backgroundImages.length);
-                const backgroundImage = data.backgroundImages[randomIndex];
-                const musicCard = await Dynamic({
-                    thumbnailImage: thumbnailUrl,
-                    name: track.title,
-                    author: track.author,
-                    authorColor: "#FF7A00",
-                    progress: 50,
-                    imageDarkness: 60,
-                    nameColor: "#FFFFFF",
-                    progressColor: "#FF7A00",
-                    backgroundImage: backgroundImage,
-                    progressBarColor: "#5F2D00",
+                // Creating song card with songcard package
+                const cardImage = await dynamicCard({
+                    thumbnailURL: track.info.thumbnail,
+                    songTitle: track.info.title,
+                    songArtist: track.info.author,
+                    trackRequester: "@All In One", // Displaying the username of who requested the song
+                    fontPath: path.join(__dirname, "../UI", "fonts", "AfacadFlux-Regular.ttf"), // Your custom font
                 });
 
-                fs.writeFileSync('musicard.png', musicCard);
+                const attachment = new AttachmentBuilder(cardImage, {
+                    name: 'songcard.png',
+                });
 
+                // Sending an embed with the song details and card image
                 const embed = new EmbedBuilder()
-                    .setAuthor({
-                        name: "Now playing",
-                        iconURL: musicIcons.playerIcon,
-                        url: "https://discord.gg/xQF9f9yUEM"
-                    })
-                    .setDescription(`- Song name :**${track.title}**\n- Author :**${track.author}**`)
-                    .setImage('attachment://musicard.png')
-                    .setFooter({ text: 'Lavalink Player', iconURL: musicIcons.footerIcon })
+                    .setAuthor({ name: "Now Streaming", iconURL: musicIcons.playerIcon, url: "https://discord.gg/xQF9f9yUEM" })
+                    .setDescription(`- Song name: **${track.info.title}**\n- Author: **${track.info.author}**`)
+                    .setImage('attachment://songcard.png')
+                    .setFooter({ text: 'Let the Beat Drop!', iconURL: musicIcons.footerIcon })
                     .setColor('#FF00FF');
 
-                const attachment = new AttachmentBuilder('musicard.png', { name: 'musicard.png' });
+                const buttonsRow = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder().setCustomId('volume_up').setEmoji('🔊').setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('volume_down').setEmoji('🔉').setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('pause').setEmoji('⏸️').setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('resume').setEmoji('▶️').setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('skip').setEmoji('⏭️').setStyle(ButtonStyle.Secondary)
+                );
 
-                await channel.send({ embeds: [embed], files: [attachment] });
+                const buttonsRow2 = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder().setCustomId('stop').setEmoji('⏹️').setStyle(ButtonStyle.Danger),
+                    new ButtonBuilder().setCustomId('clear_queue').setEmoji('🗑️').setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('show_queue').setEmoji('📜').setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('shuffle').setEmoji('🔀').setStyle(ButtonStyle.Secondary),
+                    new ButtonBuilder().setCustomId('loop').setEmoji('🔁').setStyle(ButtonStyle.Secondary)
+                );
+
+                const message = await channel.send({
+                    embeds: [embed],
+                    files: [attachment],
+                    components: [buttonsRow, buttonsRow2]
+                });
+
+                player.currentMessageId = message.id;
+                
             } catch (error) {
-                console.error('Error creating or sending music card:', error);
+                console.error('Error creating or sending song card:', error);
             }
         });
 
-        client.manager.on('queueEnd', player => {
+        client.riffy.on('queueEnd', (player) => {
             const channel = client.channels.cache.get(player.textChannel);
             const embed = new EmbedBuilder()
                 .setAuthor({
                     name: "Queue is Empty",
-                    iconURL: musicIcons.beatsIcon,
+                    iconURL: musicIcons.alertIcon,
                     url: "https://discord.gg/xQF9f9yUEM"
                 })
                 .setDescription('**Leaving voice channel!**')
-                .setFooter({ text: 'Lavalink Player', iconURL: musicIcons.footerIcon })
+                .setFooter({ text: 'Let the Beat Drop!', iconURL: musicIcons.footerIcon })
                 .setColor('#FFFF00');
             channel.send({ embeds: [embed] });
             player.destroy();
         });
 
-        client.on('raw', d => client.manager.updateVoiceState(d));
+        client.on('interactionCreate', async (interaction) => {
+            if (!interaction.isButton()) return;
+
+            const player = client.riffy.players.get(interaction.guildId);
+            if (!player) return interaction.reply({ content: 'No active player!', ephemeral: true });
+
+            // Handle button interactions
+            switch (interaction.customId) {
+                case 'volume_up':
+                    player.setVolume(Math.min(player.volume + 10, 100));
+                    interaction.reply({ content: 'Volume increased!', ephemeral: true });
+                    break;
+
+                case 'volume_down':
+                    player.setVolume(Math.max(player.volume - 10, 0));
+                    interaction.reply({ content: 'Volume decreased!', ephemeral: true });
+                    break;
+
+                case 'pause':
+                    player.pause(true);
+                    interaction.reply({ content: 'Player paused.', ephemeral: true });
+                    break;
+
+                case 'resume':
+                    player.pause(false);
+                    interaction.reply({ content: 'Player resumed.', ephemeral: true });
+                    break;
+
+                case 'skip':
+                    player.stop(); 
+                    interaction.reply({ content: 'Skipped to the next track.', ephemeral: true });
+                    break;
+
+                case 'stop':
+                    player.destroy(); 
+                    interaction.reply({ content: 'Stopped the music and disconnected.', ephemeral: true });
+                    break;
+
+                case 'clear_queue':
+                    player.queue.clear();
+                    interaction.reply({ content: 'Queue cleared.', ephemeral: true });
+                    break;
+
+                case 'show_queue':
+                    if (!player || !player.queue.length) {
+                        return interaction.reply({ content: 'The queue is empty.', ephemeral: true });
+                    }
+                    const queueEmbed = new EmbedBuilder()
+                        .setTitle('Current Music Queue')
+                        .setColor('#00FF00')
+                        .setDescription(
+                            player.queue.map((track, index) => `${index + 1}. **${track.info.title}**`).join('\n')
+                        );
+                    await interaction.reply({ embeds: [queueEmbed], ephemeral: true });
+                    break;
+
+                case 'shuffle':
+                    if (player.queue.size > 0) {
+                        player.queue.shuffle();
+                        interaction.reply({ content: 'The queue has been shuffled!', ephemeral: true });
+                    } else {
+                        interaction.reply({ content: 'The queue is empty!', ephemeral: true });
+                    }
+                    break;
+
+                case 'loop':
+                    let loopMode = player.loop || 'none';
+                    if (loopMode === 'none') {
+                        player.setLoop('track'); 
+                        loopMode = 'track';
+                    } else if (loopMode === 'track') {
+                        player.setLoop('queue'); 
+                        loopMode = 'queue';
+                    } else {
+                        player.setLoop('none'); 
+                        loopMode = 'none';
+                    }
+                    interaction.reply({ content: `Loop mode set to: **${loopMode}**.`, ephemeral: true });
+                    break;
+            }
+        });
+
+        client.on('raw', d => client.riffy.updateVoiceState(d));
 
         client.once('ready', () => {
             console.log('\x1b[35m[ MUSIC 2 ]\x1b[0m', '\x1b[32mLavalink Music System Active ✅\x1b[0m');
-            client.manager.init(client.user.id);
+            client.riffy.init(client.user.id);
         });
     } else {
         console.log('\x1b[31m[ MUSIC 2 ]\x1b[0m', '\x1b[31mLavalink Music System Disabled ❌\x1b[0m');
