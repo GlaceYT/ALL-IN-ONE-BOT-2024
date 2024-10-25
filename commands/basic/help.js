@@ -85,7 +85,7 @@ module.exports = {
                     description: `Welcome to the help command! This bot provides a variety of commands to enhance your server experience. Below are the categories and the number of commands available in each.`,
                     commands: [
                         `**💜 Bot Developer:** GlaceYT\n`+
-                        `**Bot Version:** 1.0.0\n`+
+                        `**Bot Version:** 1.1.0\n`+
                         `**Total Servers:** ${totalServers}\n`+
                         `**Total Members:** ${totalMembers}\n`+
                         `**Bot Uptime:** ${uptimeHours}h ${uptimeMinutes}m ${uptimeSeconds}s\n`+
@@ -243,7 +243,7 @@ module.exports = {
                     description: `Welcome to the help command! This bot provides a variety of commands to enhance your server experience. Below are the categories and the number of commands available in each.`,
                     commands: [
                         `**💜 Bot Developer:** GlaceYT\n`+
-                        `**Bot Version:** 1.0.0\n`+
+                        `**Bot Version:** 1.1.0\n`+
                         `**Total Servers:** ${totalServers}\n`+
                         `**Total Members:** ${totalMembers}\n`+
                         `**Bot Uptime:** ${uptimeHours}h ${uptimeMinutes}m ${uptimeSeconds}s\n`+
@@ -422,7 +422,7 @@ module.exports = {
                 try {
                     await button.update({ embeds: [createEmbed()], components: [createDropdown(), createActionRow()] });
                 } catch (error) {
-                    console.error('Error updating the interaction:', error);
+                    //console.error('Error updating the interaction:', error);
                 }
             });
 
@@ -430,7 +430,7 @@ module.exports = {
                 try {
                     await interaction.editReply({ components: [] });
                 } catch (error) {
-                    console.error('Error editing the interaction reply:', error);
+                    //console.error('Error editing the interaction reply:', error);
                 }
             });
            }   else {
