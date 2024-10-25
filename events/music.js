@@ -120,7 +120,7 @@ module.exports = (client) => {
             if (!interaction.isButton()) return;
 
             const player = client.riffy.players.get(interaction.guildId);
-            if (!player) return interaction.reply({ content: 'No active player!', ephemeral: true });
+            // if (!player) return interaction.reply({ content: 'No active player!', ephemeral: true });
 
             // Handle button interactions
             switch (interaction.customId) {
