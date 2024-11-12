@@ -197,8 +197,8 @@ async function handleCloseButton(interaction, client) {
     if (ticketUser) {
         const embed = new EmbedBuilder()
             .setColor(0x0099ff)
-            .setAuthor({ 
-                name: "Ticket closed!", 
+            .setAuthor({
+                name: "Ticket closed!",
                 iconURL: ticketIcons.correctrIcon,
                 url: "https://discord.gg/xQF9f9yUEM"
             })
@@ -209,5 +209,81 @@ async function handleCloseButton(interaction, client) {
         await ticketUser.send({ content: `Your ticket has been closed.`, embeds: [embed] });
     }
 
-    interaction.followUp({ content: 'Ticket closed and user notified.', ephemeral: true });
+    // Now send the rating dropdown to the user
+    const ratingEmbed = new EmbedBuilder()
+        .setColor(0x0099ff)
+        .setAuthor({
+            name: "Rate Your Support Experience",
+            iconURL: ticketIcons.correctrIcon,
+            url: "https://discord.gg/xQF9f9yUEM"
+        })
+        .setDescription('Please rate your experience with our support team.')
+        .setFooter({ text: 'Your feedback is important to us!', iconURL: ticketIcons.heartIcon })
+        .setTimestamp();
+
+    const ratingMenu = new StringSelectMenuBuilder()
+        .setCustomId(`rate_ticket_${ticketId}`)
+        .setPlaceholder('Rate your experience')
+        .addOptions([
+            { label: '🌟 Excellent', value: 'excellent' },
+            { label: '🙂 Good', value: 'good' },
+            { label: '😐 Average', value: 'average' },
+            { label: '😞 Poor', value: 'poor' }
+        ]);
+
+    const actionRow = new ActionRowBuilder().addComponents(ratingMenu);
+
+    // Send the rating menu to the user
+    await ticketUser.send({
+        embeds: [ratingEmbed],
+        components: [actionRow]
+    });
+
+    interaction.followUp({ content: 'Ticket closed and user notified. A rating menu has been sent to the user.', ephemeral: true });
+}
+
+async function handleSelectMenu(interaction, client) {
+    if (interaction.customId.startsWith('rate_ticket_')) {
+        // This is a rating interaction, handle it separately
+        const ticketId = interaction.customId.replace('rate_ticket_', '');
+        const rating = interaction.values[0];  // Get the selected rating
+
+        // Fetch ticket information (if needed for logging or processing)
+        const ticket = await ticketsCollection.findOne({ id: ticketId });
+        if (!ticket) {
+            return interaction.followUp({ content: 'Ticket not found. Please report to staff!', ephemeral: true });
+        }
+
+        // Here you can store the rating in the database (optional)
+        await ticketsCollection.updateOne(
+            { id: ticketId },
+            { $set: { rating } }  // Add the rating to the ticket entry
+        );
+
+        // Acknowledge the rating and thank the user
+        await interaction.update({
+            content: `Thank you for your feedback, ${interaction.user.username}!`,
+            components: [],
+            ephemeral: true
+        });
+
+        // Optionally, send a message to the support staff or log the rating
+        const supportGuild = client.guilds.cache.get(ticket.guildId);
+        if (supportGuild) {
+            const adminRole = supportGuild.roles.cache.get(ticket.adminRoleId);
+            if (adminRole) {
+                const ratingEmbed = new EmbedBuilder()
+                    .setColor(0x0099ff)
+                    .setTitle("Ticket Rating Submitted")
+                    .setDescription(`User ${interaction.user.username} rated their support experience as: **${rating}**`)
+                    .setFooter({ text: 'Support team notified.', iconURL: ticketIcons.modIcon })
+                    .setTimestamp();
+
+                // Send rating to admin or support team
+                await supportGuild.channels.cache.get(ticket.ticketChannelId).send({
+                    embeds: [ratingEmbed]
+                });
+            }
+        }
+    }
 }
