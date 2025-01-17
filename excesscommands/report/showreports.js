@@ -17,14 +17,20 @@ module.exports = {
 
         try {
             const reports = await getReports(userToCheck.id);
+
             if (reports && reports.reports.length > 0) {
+             
+                const reportDetails = await Promise.all(
+                    reports.reports.map(async (r, index) => {
+                        const reporter = await message.client.users.fetch(r.reporterId);
+                        return `${index + 1}. Reported by **${reporter.tag}** on ${new Date(r.timestamp).toLocaleString()}: ${r.reason}`;
+                    })
+                );
+
                 const reportEmbed = new EmbedBuilder()
                     .setColor('#00FF00')
                     .setTitle(`Reports for ${userToCheck.tag}`)
-                    .setDescription(reports.reports.map(async (r, index) => {
-                        const reporter = await message.client.users.fetch(r.reporterId);
-                        return `${index + 1}. Reported by ${reporter.tag} on ${new Date(r.timestamp).toLocaleString()}: ${r.reason}`;
-                    }).join('\n'))
+                    .setDescription(reportDetails.join('\n'))
                     .setTimestamp();
 
                 message.channel.send({ embeds: [reportEmbed] });
