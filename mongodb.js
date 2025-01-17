@@ -48,6 +48,7 @@ const birthdayCollection = db.collection('birthday');
 const applicationCollection = db.collection('applications'); 
 const serverLevelingLogsCollection = db.collection('serverLevelingLogs');
 const commandLogsCollection = db.collection('commandLogs');
+const reportsCollection = db.collection('reports'); 
 async function saveGiveaway(giveaway) {
     await giveawayCollection.updateOne(
         { messageId: giveaway.messageId },
@@ -93,4 +94,5 @@ module.exports = {
     applicationCollection,
     serverLevelingLogsCollection,
     commandLogsCollection,
+    reportsCollection,
 };
