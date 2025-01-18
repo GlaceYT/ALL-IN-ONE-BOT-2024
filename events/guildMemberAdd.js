@@ -63,18 +63,18 @@ module.exports = async (client) => {
                 const randomImage = getRandomImage(data.welcomeImages);
                 
                 // Keep the title short and sweet
-                const shortTitle = `Welcome ${memberCount}${suffix} Member!`;
+                   const shortTitle = truncateUsername(`Welcome ${memberCount}${suffix}`, 15);
 
                 const welcomecard = new Wcard()
                     .setName(userName)
                     .setAvatar(member.user.displayAvatarURL({ format: 'png' }))
-                    .setTitle(shortTitle) // Fits within 15 characters
+                    .setTitle(shortTitle) // Ensure the title is <= 15 characters
                     .setColor("00e5ff")
                     .setBackground(randomImage);
-
+                
                 const card = await welcomecard.build();
                 const attachment = new AttachmentBuilder(card, { name: 'welcome.png' });
-
+                
                 const embed = new EmbedBuilder()
                     .setTitle("Welcome!")
                     .setDescription(`${member}, You are the **${memberCount}${suffix}** member of our server!`)
@@ -89,12 +89,12 @@ module.exports = async (client) => {
                     .setFooter({ text: "We're glad to have you here!", iconURL: serverIcon })
                     .setAuthor({ name: userName, iconURL: member.user.displayAvatarURL() })
                     .setTimestamp();
-
+                
                 welcomeChannel.send({
                     content: `Hey ${member}!`,
                     embeds: [embed],
                     files: [attachment]
-                });
+                });                
             }
         }
     });
