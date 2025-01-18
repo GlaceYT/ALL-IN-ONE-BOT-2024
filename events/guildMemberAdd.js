@@ -62,8 +62,8 @@ module.exports = async (client) => {
                 const serverIcon = member.guild.iconURL({ format: 'png', dynamic: true, size: 256 });
                 const randomImage = getRandomImage(data.welcomeImages);
                 
-                // Keep the title short and sweet
-                   const shortTitle = truncateUsername(`Welcome ${memberCount}${suffix}`, 15);
+               
+                const shortTitle = truncateUsername(`Welcome ${memberCount}${suffix}`, 15);
 
                 const welcomecard = new Wcard()
                     .setName(userName)
