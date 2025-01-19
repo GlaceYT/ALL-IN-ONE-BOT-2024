@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
 const { serverLevelingLogsCollection } = require('../../mongodb');
-
+const cmdIcons = require('../../UI/icons/commandicons');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setlevellogs')
