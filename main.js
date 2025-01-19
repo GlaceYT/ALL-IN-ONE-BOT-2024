@@ -7,9 +7,9 @@ const { DisTube } = require('distube');
 const { YtDlpPlugin } = require('@distube/yt-dlp');
 const { SpotifyPlugin } = require('@distube/spotify');
 const { SoundCloudPlugin } = require('@distube/soundcloud');
-const {  Dynamic } = require('musicard'); 
+const { Dynamic } = require('musicard');
 const config = require('./config.json');
-const musicIcons = require('./UI/icons/musicicons'); 
+const musicIcons = require('./UI/icons/musicicons');
 const colors = require('./UI/colors/colors');
 const loadLogHandlers = require('./logHandlers');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
@@ -17,26 +17,25 @@ const client = new Client({
     intents: Object.keys(GatewayIntentBits).map((a) => {
       return GatewayIntentBits[a];
     }),
-  });
-
+});
 
 client.commands = new Collection();
-
 
 const commandsPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(commandsPath);
 
-let totalCommands = 0; 
+// Filter command folders based on config
+const enabledCommandFolders = commandFolders.filter(folder => config.categories[folder]);
+
+let totalCommands = 0;
 
 const commands = [];
-const logDetails = []; 
 
-
-const maxWidth = 45; 
+const maxWidth = 45;
 
 console.log(`${colors.yellow}┌${'─'.repeat(maxWidth)}┐${colors.reset}`);
 
-for (const folder of commandFolders) {
+for (const folder of enabledCommandFolders) {
     const commandFiles = fs.readdirSync(path.join(commandsPath, folder)).filter(file => file.endsWith('.js'));
     const numCommands = commandFiles.length;
 
@@ -47,16 +46,14 @@ for (const folder of commandFolders) {
         commands.push(command.data.toJSON());
     }
 
-    
     const folderName = `${colors.cyan}${folder}${colors.reset}`;
     const commandCount = `${colors.green}[${numCommands}]${colors.reset}`;
-    const dotsCount = maxWidth - folder.length - numCommands.toString().length - 4; 
+    const dotsCount = maxWidth - folder.length - numCommands.toString().length - 4;
     const dots = `${colors.dim}${'.'.repeat(dotsCount)}${colors.reset}`;
-    
+
     console.log(`${colors.yellow}│${colors.reset} ${folderName}${dots}${commandCount} ${colors.yellow}│${colors.reset}`);
     totalCommands += numCommands;
 }
-
 
 console.log(`${colors.yellow}├${'─'.repeat(maxWidth)}┤${colors.reset}`);
 
@@ -172,7 +169,8 @@ const antiNuke = require('./antimodules/antiNuke');
 const antiRaid = require('./antimodules/antiRaid'); 
 
 
-const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+
+const rest = new REST({ version: '10' }).setToken(process.env.TOKEN || config.token);
 
 client.once('ready', async () => {
     console.log('\n' + '─'.repeat(40));
@@ -181,11 +179,10 @@ client.once('ready', async () => {
     console.log(`${colors.red}[ CORE ]${colors.reset} ${colors.green}Bot Name:  ${colors.reset}${client.user.tag}`);
     console.log(`${colors.red}[ CORE ]${colors.reset} ${colors.green}Client ID: ${colors.reset}${client.user.id}`);
 
-   
     console.log('\n' + '─'.repeat(40));
     console.log(`${colors.red}${colors.bright}🛡️  SECURITY SYSTEMS${colors.reset}`);
     console.log('─'.repeat(40));
-    
+
     antiSpam(client);
     antiLink(client);
     antiNuke(client);
@@ -488,8 +485,6 @@ app.listen(port, () => {
     console.log(`🔗 Listening to GlaceYT : http://localhost:${port}`);
 });
 
-client.login(process.env.TOKEN);
+client.login(process.env.TOKEN || config.token);
 
 module.exports = client;
-
-
